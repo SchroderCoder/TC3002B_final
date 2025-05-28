@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Beatles Classifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 40px;
+            background-color: #f0f0f0;
+            color: #333;
+            background-image: url("{{ url_for('static', filename='uploads/images/background.jpg') }}");
+            background-size: cover;         
+            background-position: center;     
+            background-repeat: no-repeat;    
+            height: 100vh;                  
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        img {
+            margin-top: 20px;
+            max-height: 224px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: 1px solid #aaa;
+            padding: 8px 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sube imagen de tu beatle favorito</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" required><br><br>
+            <input type="submit" value="Predict">
+        </form>
+
+        {% if filename %}
+            <h2>Prediction: {{ prediction }} ({{ '%.2f' % confidence }}% confidence)</h2>
+            <img src="{{ url_for('static', filename='uploads/' + filename) }}">
+
+            <h3>Prediction Probabilities:</h3>
+            <table>
+                <tr>
+                    <th>Class</th>
+                    <th>Probability</th>
+                </tr>
+                {% for i in range(class_names|length) %}
+                <tr>
+                    <td>{{ class_names[i] }}</td>
+                    <td>{{ '%.2f' % (all_probs[i] * 100) }}%</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+    <audio autoplay loop>
+        <source src="{{ url_for('static', filename='uploads/music/background.mp3') }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</body>
+</html>
